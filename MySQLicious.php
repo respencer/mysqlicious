@@ -3,10 +3,10 @@
 // MySQLicious 1.2
 // A Delicious to MySQL mirroring tool.
 //
-// For documentation, see http://nanovivid.com/projects/mysqlicious
+// For documentation, see http://mysqlicious.googlecode.com
 //
 //
-// Copyright (c) 2005-2006, Adam Nolley (nanovivid)
+// Copyright (c) 2005-2008, Adam Nolley (nanovivid)
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
