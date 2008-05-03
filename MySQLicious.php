@@ -1,7 +1,7 @@
 <?php
 
 // MySQLicious 1.2
-// A del.icio.us to MySQL mirroring tool.
+// A Delicious to MySQL mirroring tool.
 //
 // For documentation, see http://nanovivid.com/projects/mysqlicious
 //
@@ -61,13 +61,13 @@ class MySQLicious {
 	var $mysqlLink;
 	var $mysqlTable;
 	
-	// can be used to force an update regardless of what del.icio.us says
+	// can be used to force an update regardless of what Delicious says
 	var $forceUpdate;
 	
 	// should we escape HTML characters if needed?
 	var $outputMode;
 	
-	// XML returned by del.icio.us should be included in the output
+	// XML returned by Delicious should be included in the output
 	var $logXml;
 	
 	// http://del.icio.us/api ... or whatever it needs to be
@@ -87,7 +87,7 @@ class MySQLicious {
 	// MySQLicious constructor
 	// Parameters:
 	//  $mysqlHost			address of your MySQL server - usually "localhost"
-	//  $mysqlDatabase		MySQL database in which your del.icio.us bookmarks will be stored
+	//  $mysqlDatabase		MySQL database in which your Delicious bookmarks will be stored
 	//  $mysqlUsername		username for MySQL
 	//  $mysqlPassword		password for MySQL
 	function MySQLicious($mysqlHost, $mysqlDatabase, $mysqlUsername, $msyqlPassword) {
@@ -99,7 +99,7 @@ class MySQLicious {
 		$this->deliciousThrottleBackoffMultiplier = 2;
 		$this->out = "";
 		
-		// set the del.icio.us API
+		// set the Delicious API
 		$this->setAPIAddress("https://api.del.icio.us/v1/");
 		
 		// data table for storing update dates
@@ -123,11 +123,11 @@ class MySQLicious {
 	}
 	
 	// -------------------------------------------------------------------------------------------------------------
-	// mirror - kick off mirroring of a del.icio.us account
+	// mirror - kick off mirroring of a Delicious account
 	// Parameters:
-	//  $deliciousUsername	username for del.icio.us
-	//  $deliciousPassword	password for del.icio.us
-	//  $mysqlTable			MySQL table into which the del.icio.us bookmarks should be mirrored. 
+	//  $deliciousUsername	username for Delicious
+	//  $deliciousPassword	password for Delicious
+	//  $mysqlTable			MySQL table into which the Delicious bookmarks should be mirrored. 
 	//						NOTE: It will be created auotmatically if it doesn't exist.
 	//  $deliciousTag		[optional] Tag to filter by. If not specified, all bookmarks will be mirrored.
 	function mirror($deliciousUsername, $deliciousPassword, $mysqlTable, $deliciousTag = "") {
@@ -140,14 +140,14 @@ class MySQLicious {
 		// if we can't find the value, $localUpdate will be set to false
 		$localUpdate = $this->mysqlGetLocalUpdate($deliciousTag);
 		
-		// find out the last time del.icio.us was updated
+		// find out the last time Delicious was updated
 		$this->deliciousAPI("posts/update", $deliciousUsername, $deliciousPassword);
 		
 		// let's do some updating!
 		if ((($this->remoteUpdate > $localUpdate) or !$localUpdate or $this->forceUpdate) and !$this->isError) {
 			$this->out .= "Update may be needed. Checking now." . $this->newline . $this->newline;
 			
-			// gather all posts from the MySQL mirror for comparison to the del.icio.us ones
+			// gather all posts from the MySQL mirror for comparison to the Delicious ones
 			$sql = "SELECT * FROM `".$this->mysqlTable."`";
 			$result = mysql_query($sql);
 			if ($result and mysql_num_rows($result) > 0) {
@@ -164,11 +164,11 @@ class MySQLicious {
 			$this->mirrorStats['numUpdated'] = 0;
 			$this->mirrorStats['numDeleted'] = 0;
 			
-			// grab all posts from del.icio.us
+			// grab all posts from Delicious
 			$APIParam = (strlen($deliciousTag) > 0) ? "?tag=$deliciousTag" : "";
 			$this->deliciousAPI("/posts/all$APIParam", $deliciousUsername, $deliciousPassword);
 			
-			// if there are any posts that exist in MySQL but not on del.icio.us, get rid of the local copies
+			// if there are any posts that exist in MySQL but not on Delicious, get rid of the local copies
 			$deletePosts = array_diff(array_keys($this->localPosts), array_keys($this->foundPosts));
 			if (count($deletePosts) > 0) {
 				foreach ($deletePosts as $deleteMe) {
@@ -207,7 +207,7 @@ class MySQLicious {
 	}
 	
 	// -------------------------------------------------------------------------------------------------------------
-	// xml_start_element - parse the stuff handed back by the del.icio.us api
+	// xml_start_element - parse the stuff handed back by the Delicious api
 	// see http://www.php.net/xml-set-element-handler for why how this relates to XML parsing
 	function xml_start_element($parser, $name, $attrs) {
 		
@@ -226,7 +226,7 @@ class MySQLicious {
 				if (!array_key_exists($attrs['hash'], $this->localPosts)) {
 					$this->mysqlDeliciousInsert($attrs);
 				
-				// if some part of the post in MySQL doesn't match the del.icio.us version, update it
+				// if some part of the post in MySQL doesn't match the Delicious version, update it
 				} elseif ($this->localPosts[$attrs['hash']]['description'] != $attrs['description'] or
 						  $this->localPosts[$attrs['hash']]['extended'] != $attrs['extended'] or
 						  $this->localPosts[$attrs['hash']]['tags'] != $attrs['tag']) {
@@ -263,7 +263,7 @@ class MySQLicious {
 	
 	
 	// =============================================================================================================
-	//                                       del.icio.us API functions
+	//                                       Delicious API functions
 	// =============================================================================================================
 	
 	
@@ -282,17 +282,17 @@ class MySQLicious {
 	// deliciousAPI - make an API call
 	// Parameters:
 	//  $apiCall		call being made, in the format of "api/call" - note that there is no slash at the beginning
-	//  $user			del.icio.us username
-	//	$pass			del.icio.us password
+	//  $user			Delicious username
+	//	$pass			Delicious password
 	function deliciousAPI($apiCall, $user, $pass) {
 		// we need to recreate the XML parser every time because there's a (silly) PHP bug where you can't reuse a parser.
 		$p = $this->createXMLParser();
 		
-		// parse the del.icio.us content returned from the API
+		// parse the Delicious content returned from the API
 		$theXML = $this->deliciousDoAPI($apiCall, $user, $pass);
 		if ($theXML['success']) {
 			
-			// include XML returned by del.icio.us if we need to
+			// include XML returned by Delicious if we need to
 			if ($this->logXml) {
 				$this->out .= $this->newline;
 				$this->out .= ($this->outputMode == MYSQLICIOUS_OUTPUT_HTML) ? 
@@ -313,7 +313,7 @@ class MySQLicious {
 			$text = html_entity_decode(strip_tags($text));
 			$text = preg_replace('/[\n\r]/', $this->newline, $text);
 			
-			$this->errorText  = "del.icio.us API Error:" . $this->newline . $this->newline;
+			$this->errorText  = "Delicious API Error:" . $this->newline . $this->newline;
 			$this->errorText .= trim($text);
 		}
 		
@@ -324,8 +324,8 @@ class MySQLicious {
 	// deliciousDoAPI - just a wrapper to make API actions a little prettier
 	// Parameters:
 	//  $apiCall		call being made, in the format of "api/call" - note that there is no slash at the beginning
-	//  $user			del.icio.us username
-	//	$pass			del.icio.us password
+	//  $user			Delicious username
+	//	$pass			Delicious password
 	function deliciousDoAPI($apiCall, $user, $pass) {
 		return $this->curlIt($this->deliciousAPIPrefix.$apiCall, $user, $pass);
 	}
@@ -334,8 +334,8 @@ class MySQLicious {
 	// curlIt - grab a URL with CURL
 	// Parameters:
 	//  $url		full URL to fetch
-	//  $user		del.icio.us username
-	//	$pass		del.icio.us password
+	//  $user		Delicious username
+	//	$pass		Delicious password
 	function curlIt($url, $user, $pass) {
 		$ch = curl_init();
 		
@@ -344,7 +344,7 @@ class MySQLicious {
 		curl_setopt($ch, CURLOPT_URL, $url);				// this is the page we're grabbing
 		curl_setopt($ch, CURLOPT_USERPWD, "$user:$pass");	// HTTP auth username/password
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);		// we want the data passed back
-		curl_setopt($ch, CURLOPT_USERAGENT, "MySQLicious");	// set our useragent because del.icio.us likes it that way
+		curl_setopt($ch, CURLOPT_USERAGENT, "MySQLicious");	// set our useragent because Delicious likes it that way
 		
 		$tryCount = 0;
 		do {
@@ -360,7 +360,7 @@ class MySQLicious {
 			if ($HTTPCode == 503) {
 				$sleepytime = $this->deliciousThrottleBackoffMultiplier * 5;
 				
-				$this->out .= "WARNING: You are being throttled by the del.icio.us server. Pausing for $sleepytime seconds." . $this->newline;
+				$this->out .= "WARNING: You are being throttled by the Delicious server. Pausing for $sleepytime seconds." . $this->newline;
 				sleep($sleepytime);
 				
 				$this->deliciousThrottleBackoffMultiplier = pow($this->deliciousThrottleBackoffMultiplier, 2);
@@ -410,7 +410,7 @@ class MySQLicious {
 			$sql  = "CREATE TABLE `".$this->mysqlTable."` (`id` int(11) NOT NULL auto_increment, `url` text, `description` text, ";
 			$sql .= "`extended` text, `tags` text, `date` datetime default NULL, `hash` varchar(255) default NULL, ";
 			$sql .= "PRIMARY KEY  (`id`), KEY `date` (`date`)) TYPE=MyISAM";
-			$result = mysql_query($sql, $this->mysqlLink) or die("Unable to create ".$this->mysqlTable." to store del.icio.us posts.");
+			$result = mysql_query($sql, $this->mysqlLink) or die("Unable to create ".$this->mysqlTable." to store Delicious posts.");
 		}
 	}
 	
@@ -459,7 +459,7 @@ class MySQLicious {
 		$sql .= "`description` = '" . $this->escapeSingleQuotes($attrs['description']) . "', ";
 		$sql .= "`extended` = '" . $this->escapeSingleQuotes($attrs['extended']) . "', ";
 		$sql .= "`tags` = '" . $this->escapeSingleQuotes($attrs['tag']) . "' ";
-		// uncomment the next line to change the item's date (i've had issues where del.icio.us changes the item date when it shouldn't so i disabled this)
+		// uncomment the next line to change the item's date (i've had issues where Delicious changes the item date when it shouldn't so i disabled this)
 		// $sql .= "`date` = '" . $this->time_deliciousToMysql($attrs['time']) . "' ";
 		$sql .= "WHERE `hash` = '{$attrs['hash']}'";
 		
@@ -468,7 +468,7 @@ class MySQLicious {
 	}
 	
 	// -------------------------------------------------------------------------------------------------------------
-	// mysqlDeliciousInsert - insert a post from del.icio.us into MySQL
+	// mysqlDeliciousInsert - insert a post from Delicious into MySQL
 	// Parameters:
 	//  $attrs		attributes from XML <post ...> element
 	function mysqlDeliciousInsert($attrs) {
@@ -525,13 +525,13 @@ class MySQLicious {
 	// =============================================================================================================
 	
 	// -------------------------------------------------------------------------------------------------------------
-	// time_deliciousToTimestamp - convert $time given by del.icio.us API call to a UNIX timestamp
+	// time_deliciousToTimestamp - convert $time given by Delicious API call to a UNIX timestamp
 	function time_deliciousToTimestamp($time) {
 		return strtotime(ereg_replace('T|Z',' ', $time));
 	}
 	
 	// -------------------------------------------------------------------------------------------------------------
-	// time_deliciousToMysql - convert $time given by del.icio.us API call to MySQL friendly datetime
+	// time_deliciousToMysql - convert $time given by Delicious API call to MySQL friendly datetime
 	function time_deliciousToMysql($time) {
 		return $this->time_timestampToMysql($this->time_deliciousToTimestamp($time));
 	}

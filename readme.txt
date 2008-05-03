@@ -1,11 +1,8 @@
 MySQLicious
-A del.icio.us to MySQL mirroring tool.
+A Delicious to MySQL mirroring tool.
 
 
 For documentation, see http://nanovivid.com/projects/mysqlicious
-
-
-
 
 
 

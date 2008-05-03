@@ -1,7 +1,7 @@
 #!/usr/bin/php -q
 <?php
 // mirror.php MySQLicious implementation
-// Mirrors del.icio.us bookmarks.
+// Mirrors Delicious bookmarks.
 // v1.01 - 8/6/2006
 
 // MySQL configuration
@@ -12,8 +12,8 @@ $MySQL_Username	= "username";	// MySQL username
 $MySQL_Password	= "password";	// MySQL password
 
 // del.icio.us configuration
-$delicious_Username		= "username";	// del.icio.us username
-$delicious_Password		= "password";	// del.icio.us password
+$delicious_Username		= "username";	// Delicious username
+$delicious_Password		= "password";	// Delicious password
 $delicious_TagFilter	= "";			// tag to mirror. if left blank, all bookmarks will be mirrored.
 
 
