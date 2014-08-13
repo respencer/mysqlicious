@@ -13,10 +13,10 @@ bookmarks after they're in your database; that part is up to you.
 Requirements
 ------------
 
-PHP 4 with cURL support
-MySQL
-Access to cron (or [pseudo-cron](http://www.bitfolge.de/pseudocron-en.html)).
-A [Delicious](https://delicious.com) account and some bookmarks.
+* PHP 4 with cURL support
+* MySQL
+* Access to cron (or [pseudo-cron](http://www.bitfolge.de/pseudocron-en.html)).
+* A [Delicious](https://delicious.com) account and some bookmarks.
 
 
 Usage
