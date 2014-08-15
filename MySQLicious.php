@@ -167,8 +167,8 @@ class MySQLicious {
 			$this->mirrorStats['numDeleted'] = 0;
 
 			// Grab all posts from Delicious.
-			$APIParam = (strlen($deliciousTag) > 0) ? "?tag=$deliciousTag" : "";
-			$this->deliciousAPI("/posts/all$APIParam", $deliciousUsername, $deliciousPassword);
+			$APIParam = (strlen($deliciousTag) > 0) ? "&tag=$deliciousTag" : "";
+			$this->deliciousAPI("/posts/all?results=100000$APIParam", $deliciousUsername, $deliciousPassword);
 
 			// If there are any posts that exist in MySQL but not on Delicious, get rid of the local copies.
 			$deletePosts = array_diff(array_keys($this->localPosts), array_keys($this->foundPosts));
