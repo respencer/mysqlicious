@@ -109,8 +109,8 @@ class MySQLicious {
 		$this->forceUpdate = false;
 		$this->logXml = false;
 
-		// If $_ENV['SHELL'] exists, we're probably in command line mode.
-		if (array_key_exists('SHELL', $_ENV)) {
+		// Check if we're in command line mode.
+		if (php_sapi_name() == 'cli') {
 			$this->setOutputMode(MYSQLICIOUS_OUTPUT_CMD);
 		} else {
 			$this->setOutputMode(MYSQLICIOUS_OUTPUT_HTML);
