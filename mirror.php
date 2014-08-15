@@ -4,36 +4,34 @@
 // Mirrors Delicious bookmarks.
 // v1.01 - 8/6/2006
 
-// MySQL configuration
-$MySQL_Host		= "localhost";	// address of your MySQL server
-$MySQL_Database	= "db";			// name of the MySQL database you want to use
-$MySQL_Table	= "delicious";	// name of the MySQL table you want to put del.icio.us bookmarks in
-$MySQL_Username	= "username";	// MySQL username
-$MySQL_Password	= "password";	// MySQL password
+// MySQL configuration.
+$MySQL_Host	= "localhost";	// Address of your MySQL server.
+$MySQL_Database	= "db";		// Name of the MySQL database you want to use.
+$MySQL_Table	= "delicious";	// Name of the MySQL table you want to put the Delicious bookmarks in.
+$MySQL_Username	= "username";	// MySQL username.
+$MySQL_Password	= "password";	// MySQL password.
 
-// del.icio.us configuration
-$delicious_Username		= "username";	// Delicious username
-$delicious_Password		= "password";	// Delicious password
-$delicious_TagFilter	= "";			// tag to mirror. if left blank, all bookmarks will be mirrored.
-
+// Delicious configuration.
+$delicious_Username	= "username";	// Delicious username.
+$delicious_Password	= "password";	// Delicious password.
+$delicious_TagFilter	= "";		// Tag to mirror. If left blank, all bookmarks will be mirrored.
 
 // ---------------------------------------------------------------
-//  You shouldn't need to change anything below here
+//  You shouldn't need to change anything below here.
 // ---------------------------------------------------------------
 
-
-// import the MySQLicious code
+// Import the MySQLicious code.
 $currentDir = dirname(__FILE__)."/";
 require $currentDir."MySQLicious.php";
 
-// initialize MySQLicious
+// Initialize MySQLicious.
 $delicious = new MySQLicious($MySQL_Host, $MySQL_Database, $MySQL_Username, $MySQL_Password);
 
-// un-comment the following line to turn on XML logging
-// this should only be necessary as a debugging measure
+// Un-comment the following line to turn on XML logging.
+// This should only be necessary as a debugging measure.
 //$delicious->logXml = true;
 
-// perform the mirroring
+// Perform the mirroring.
 $delicious->mirror($delicious_Username, $delicious_Password, $MySQL_Table, $delicious_TagFilter);
 
 ?>
