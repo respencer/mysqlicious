@@ -1,6 +1,6 @@
 <?php
 
-// MySQLicious 1.2
+// MySQLicious 1.3
 // A Delicious to MySQL mirroring tool.
 //
 // For documentation, see https://github.com/respencer/mysqlicious/wiki
