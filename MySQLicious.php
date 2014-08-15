@@ -524,7 +524,7 @@ class MySQLicious {
 	// -------------------------------------------------------------------------------------------------------------
 	// time_deliciousToTimestamp - Convert $time given by Delicious API call to a UNIX timestamp.
 	function time_deliciousToTimestamp($time) {
-		return strtotime(ereg_replace('T|Z',' ', $time));
+		return strtotime(preg_replace('/T|Z/', ' ', $time));
 	}
 
 	// -------------------------------------------------------------------------------------------------------------
