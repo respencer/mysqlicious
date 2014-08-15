@@ -3,9 +3,10 @@
 // MySQLicious 1.2
 // A Delicious to MySQL mirroring tool.
 //
-// For documentation, see http://mysqlicious.googlecode.com
+// For documentation, see https://github.com/respencer/mysqlicious/wiki
 //
 //
+// Copyright (c) 2014, Robert E. Spencer
 // Copyright (c) 2005-2008, Adam Nolley (nanovivid)
 // All rights reserved.
 //
