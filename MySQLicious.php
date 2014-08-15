@@ -118,6 +118,9 @@ class MySQLicious {
 
 		// Connect to the MySQL server and select the database.
 		$this->mysqlLink = mysql_connect($mysqlHost, $mysqlUsername, $msyqlPassword) or die("Could not connect to MySQL server.");
+		mysql_query("SET NAMES 'UTF8'", $this->mysqlLink);
+		mysql_query("SET CHARACTER SET 'UTF8'", $this->mysqlLink);
+		mysql_query("SET COLLATION_CONNECTION='utf8_general_ci'", $this->mysqlLink);
 		$db = mysql_select_db($mysqlDatabase, $this->mysqlLink) or die("Could not select specified database ($mysqlDatabase).");
 	}
 
