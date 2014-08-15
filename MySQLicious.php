@@ -70,7 +70,7 @@ class MySQLicious {
 	// XML returned by Delicious should be included in the output.
 	var $logXml;
 
-	// http://del.icio.us/api ... Or whatever it needs to be.
+	// https://api.del.icio.us/v1/ ... Or whatever it needs to be.
 	var $deliciousAPIPrefix;
 
 	// If we start getting throttled, this will let us back off and get it cleared (hopefully).
@@ -266,7 +266,7 @@ class MySQLicious {
 	// -------------------------------------------------------------------------------------------------------------
 	// setAPIAddress - Change the API address.
 	// Parameters:
-	//  $delAPI		http://del.icio.us/api address.
+	//  $delAPI		Delicious API URL.
 	function setAPIAddress($delAPI) {
 		if ($delAPI{strlen($delAPI) - 1} != "/") {
 			$delAPI .= "/";
@@ -390,7 +390,7 @@ class MySQLicious {
 	// =============================================================================================================
 
 	// -------------------------------------------------------------------------------------------------------------
-	// mysqlGetLocalUpdate - Make sure our data tables exist. If not, create them.
+	// mysqlCheckTables - Make sure our data tables exist. If not, create them.
 	function mysqlCheckTables() {
 		// Make sure the MySQLicious data table exists.
 		if (!$this->mysqlTableExists($this->MySQLiciousDataTable)) {
