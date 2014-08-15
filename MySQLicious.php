@@ -340,6 +340,7 @@ class MySQLicious {
 		curl_setopt($ch, CURLOPT_USERPWD, "$user:$pass");	// HTTP auth username/password.
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);		// We want the data passed back.
 		curl_setopt($ch, CURLOPT_USERAGENT, "MySQLicious");	// Set our useragent because Delicious likes it that way.
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);	// Just accept SSL certificate, as we have nothing to compare it too.
 
 		$tryCount = 0;
 		do {
