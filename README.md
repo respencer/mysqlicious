@@ -14,7 +14,7 @@ Requirements
 ------------
 
 * PHP 5 with cURL support
-* MySQL
+* MySQL 5
 * Access to cron (or [pseudo-cron](http://www.bitfolge.de/pseudocron-en.html)).
 * A [Delicious](https://delicious.com) account and some bookmarks.
 

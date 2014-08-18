@@ -399,7 +399,7 @@ class MySQLicious {
 		// Make sure the MySQLicious data table exists.
 		if (!$this->mysqlTableExists($this->MySQLiciousDataTable)) {
 			$sql  = "CREATE TABLE `".$this->MySQLiciousDataTable."` (`tag` varchar(255) NOT NULL default '', ";
-			$sql .= "`lastupdate` datetime default NULL, PRIMARY KEY (`tag`)) TYPE=MyISAM";
+			$sql .= "`lastupdate` datetime default NULL, PRIMARY KEY (`tag`)) ENGINE=MyISAM";
 			$result = mysql_query($sql, $this->mysqlLink) or die("Unable to create table to store MySQLicious data.");
 		}
 
@@ -407,7 +407,7 @@ class MySQLicious {
 		if (!$this->mysqlTableExists($this->mysqlTable)) {
 			$sql  = "CREATE TABLE `".$this->mysqlTable."` (`id` int(11) NOT NULL auto_increment, `url` text, `description` text, ";
 			$sql .= "`extended` text, `tags` text, `date` datetime default NULL, `hash` varchar(255) default NULL, ";
-			$sql .= "PRIMARY KEY  (`id`), KEY `date` (`date`)) TYPE=MyISAM";
+			$sql .= "PRIMARY KEY  (`id`), KEY `date` (`date`)) ENGINE=MyISAM";
 			$result = mysql_query($sql, $this->mysqlLink) or die("Unable to create ".$this->mysqlTable." to store Delicious posts.");
 		}
 	}
